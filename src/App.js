@@ -100,11 +100,20 @@ function Item({ item, handleDeleteItem, handlePackedItem }) {
 }
 
 function Stats({ items }) {
-  console.log(items);
+  if (!items.length) return <footer className="stats"><em>Start Adding some items to your packing list 💣</em></footer>
+
+  const itemPacked = items.filter(item => item.packed).length
+  const percentual = itemPacked ? Math.floor(itemPacked * 100 / items.length) : '0'
+
 
   return (
     <footer className='stats'>
-      <em>You have {items.length} items on your list, and you alredy packed X (X%)</em>
+      {percentual === 100 ?
+        <em>You got everything. Ready to go!</em> :
+        <em>You have {items.length} items on your list, and you alredy packed {itemPacked >= 1 ? itemPacked : 'nothing'} ({percentual} %)</em>
+      }
+
+
     </footer>
   )
 }
