@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+const number = [4, 2, 6, 3, 1, 5]
+
+console.log(number.sort((a, b) => b - a));
+
 
 // const initialItems = [
 //   { id: 1, description: "Passports", quantity: 2, packed: false },
@@ -19,7 +23,7 @@ export default function App() {
   }
 
   function handlePackedItem(id) {
-    console.log(id);
+
 
 
     setItem(items => items.map((item) => item.id === id ? { ...item, packed: !item.packed } : item))
@@ -80,12 +84,33 @@ function Form({ handleAddItems }) {
 }
 
 function PackingList({ items, setItem, handleDeleteItem, handlePackedItem }) {
+  const [sortBy, setSortBy] = useState('input')
+  let sortedItem
 
+  if (sortBy === 'input') {
+    sortedItem = items
+  }
+
+  if (sortBy === 'description') {
+    sortedItem = items.slice().sort((a, b) => a.description.localeCompare(b.description))
+  }
+
+  if (sortBy === 'packed') {
+    sortedItem = items.slice().sort((a, b) => Number(a.packed) - Number(b.packed))
+  }
 
   return <div className='list'>
     <ul>
-      {items.map(item => <Item item={item} key={item.id} handleDeleteItem={handleDeleteItem} handlePackedItem={handlePackedItem} />)}
+      {sortedItem.map(item => <Item item={item} key={item.id} handleDeleteItem={handleDeleteItem} handlePackedItem={handlePackedItem} />)}
     </ul>
+    <div className="actions">
+      <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+        <option value="input">Sort by input order</option>
+        <option value="description">Sort by description</option>
+        <option value="packed">Sort by packed</option>
+      </select>
+      <button>Clear</button>
+    </div>
   </div>
 }
 
